@@ -470,7 +470,7 @@
                 <form class="form-horizontal" method="post" role="form">{% csrf_token %}
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <textarea id="xmltextarea" name="from_xml"></textarea>
+                            <textarea id="editor">{{ inst_xml }}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -486,6 +486,16 @@
 
 {% endblock %}
 {% block script %}
+    <script src="{{ STATIC_URL }}js/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.getSession().setMode("ace/mode/xml");
+
+        var input = $('input[name="inst_xml"]');
+            editor.getSession().on("change", function () {
+            input.val(editor.getSession().getValue());
+        });
+    </script>
     <script src="{% static "js/bootstrap-multiselect.js" %}"></script>
     <script>
         function toggleValue(string, updated_value, checked) {
