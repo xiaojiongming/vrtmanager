@@ -564,22 +564,25 @@
         <div class="clearfix"></div>
     </div>
     <div class="tab-pane tab-inst" id="instancexml">
-        <div id="viewXMLpre">
-            <pre class="pre-scrollable">{{ inst_xml }}</pre>
-            {% ifequal status 5 %}
-                <button type="button" class="btn btn-lg btn-primary pull-right"
-                        onclick="javascript:$('#viewXMLpre').hide();$('#viewXMLform').show();">{% trans "Edit" %}</button>
-            {% else %}
-                <button type="button" class="btn btn-lg btn-primary pull-right disabled">{% trans "Edit" %}</button>
-            {% endifequal %}
-        </div>
-        <form id="viewXMLform" class="form-horizontal" method="post" role="form" style="display: none">{% csrf_token %}
-            <textarea id="xmltextarea" name="inst_xml">{{ inst_xml }}</textarea>
-            <button type="button" class="btn btn-lg btn-default"
-                    onclick="javascript:$('#viewXMLpre').show();$('#viewXMLform').hide();">{% trans "Close" %}</button>
-            <button type="submit" class="btn btn-lg btn-danger pull-right" name="change_xml">{% trans "Save" %}</button>
-        </form>
-        <div class="clearfix"></div>
+      {% ifnotequal status 5 %}
+      <p>{% trans "To edit XML the instance must be shutdown" %}</p>
+      {% endifnotequal %}
+      <form class="form-horizontal" method="post" role="form">{% csrf_token %}
+          <div class="col-sm-12" id="xmlheight">
+              <textarea id="editor">{{ inst_xml }}</textarea>
+          </div>
+          {% ifequal status 5 %}
+              <input type="hidden" name="inst_xml">
+              <button type="submit" class="btn btn-lg btn-success pull-right" name="change_xml">
+                  {% trans "Change" %}
+              </button>
+          {% else %}
+              <button class="btn btn-lg btn-success pull-right disabled">
+                  {% trans "Change" %}
+              </button>
+          {% endifequal %}
+      </form>
+      <div class="clearfix"></div>
     </div>
     </div>
     </div>
@@ -791,6 +794,16 @@
     {% include 'sidebar_close.html' %}
 {% endblock %}
 {% block script %}
+<script src="{{ STATIC_URL }}js/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.getSession().setMode("ace/mode/xml");
+
+    var input = $('input[name="inst_xml"]');
+        editor.getSession().on("change", function () {
+        input.val(editor.getSession().getValue());
+    });
+</script>
 <script>
     function open_console() {
         window.open('{% url 'console' %}?token={{ host_id }}-{{ uuid }}', '', 'width=850,height=485')
