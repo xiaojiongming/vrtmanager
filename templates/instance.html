@@ -62,11 +62,11 @@
                 <span class="glyphicon glyphicon-off"></span><br>{% trans "Power" %}
             </a>
         </li>
+        {% ifequal compute.hypervisor 'qemu' %}
         <li><a class="inst-btn" href="#access" data-toggle="tab">
             <span class="glyphicon glyphicon-briefcase"></span><br>{% trans "Access" %}
         </a>
         </li>
-        {% ifequal compute.hypervisor 'qemu' %}
         <li><a class="inst-btn" href="#snapshots" data-toggle="tab">
             <span class="glyphicon glyphicon-camera"></span><br>{% trans "Snapshots" %}
         </a>
