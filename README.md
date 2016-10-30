@@ -1,3 +1,8 @@
+2016/10/30 at Neusoft
+
+* add lxc manage support ,include create a lxc vm from custom /template (ansible and virsh)
+* add lxc console support (python-butterfly,ZeroMQ,supervisord)
+##################################################################################
 ## WebVirtMgr panel \(a fork by [daniviga](http://daniele.vigano.me)\)
 
 Based on [**WebVirtMgr v4.8.9**](https://github.com/retspen/webvirtmgr/)
