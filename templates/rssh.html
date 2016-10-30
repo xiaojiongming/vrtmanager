@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% block title %}{% trans "Connection" %}-{{ hostname }}({{ ip }}){% endblock %}
+{% block content %}
+    {% include 'sidebar.html' %}
+    <div class="main col-xs-12 col-sm-9">
+        {% if errors %}
+            {% for error in errors %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <h4>{% trans "Basic details" %}</h4>
+        <table class="table table-hover table-nolines">
+            <tbody>
+                <tr>
+                    <td>{% trans "Connection" %}</td>
+                    <td>{{ uri_conn }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans "Hostname" %}</td>
+                    <td>{{ hostname }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans "Hypervisor" %}</td>
+                    <td>{{ hypervisor }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="btn-group-lg">
+            <a href="#" target="_blank" class="btn btn-success btn-lg" data-toggle="modal"
+               onclick="open_ssh()">{% trans "远程SSH" %}</a>
+            <p>{% trans "This action opens a new window with console SSH connection to your instance." %}</p>
+            <a href="#" target="_blank" class="btn btn-primary btn-lg pull-right"  title="Console port: {{ console_port }}"
+               onclick="open_ssh()">{% trans "Console" %}</a>
+        </div>
+
+    </div>
+    </div>
+    </div>
+
+{% include 'sidebar_close.html' %}
+{% endblock %}
+{% block script %}
+
+<script>
+    function open_ssh() {
+        window.open('/connect/{{ ip }}', '{{ ip }}', 'width=850,height=485,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
+    }
+</script>
+
+{% endblock %}

@@ -27,6 +27,10 @@ urlpatterns = patterns('',
     url(r'^info/insts_status/(\d+)/$', 'instance.views.insts_status', name='insts_status'),
     url(r'^info/inst_status/(\d+)/([\w\-\.]+)/$', 'instance.views.inst_status', name='inst_status'),
     url(r'^info/instusage/(\d+)/([\w\-\.]+)/$', 'instance.views.instusage', name='instusage'),
+    url(r'^rssh/(\d+)/$', 'rssh.views.rssh', name='rssh'),
+    url(r'^connect/(.*)$','connect.views.connect',name='connect'),
+    url(r'^createlxc/(\d+)/$', 'createlxc.views.createlxc', name='createlxc'),
+    url(r'^lxconsole/$','lxconsole.views.start_lxconsole', name='lxconsole'),
 )
 
 urlpatterns += patterns('',

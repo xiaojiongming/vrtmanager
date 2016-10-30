@@ -1,0 +1,47 @@
+import subprocess
+import socket
+import time
+from random import choice
+from webvirtmgr.settings import BUTTER_MAPPING,MAX_BUTTER_PROCESSOR_THREAD
+import os
+import signal
+
+def getunusedport():
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.bind(('localhost',0))
+    addr,port = s.getsockname()
+    s.close()
+    return port
+
+def createbutter(lxc_host_ip,vm_name):
+    mapping = {}
+    if len(BUTTER_MAPPING) > MAX_BUTTER_PROCESSOR_THREAD:
+        butter_name = [name for name in BUTTER_MAPPING]
+        del_butter = choice(butter_name)
+        BUTTER_MAPPING[del_butter]['subprocess'].kill()
+        BUTTER_MAPPING[del_butter]['subprocess'].communicate()
+        del BUTTER_MAPPING[del_butter]
+    if vm_name not in BUTTER_MAPPING:
+        port = getunusedport()
+        mapping['port'] = port
+        BUTTER_MAPPING[vm_name] = mapping
+        butter_process = subprocess.Popen(['butterfly.server.py', '--host=0.0.0.0', '--port=' + str(port), '--unsecure',
+                                           "--cmd=virsh -c lxc+tcp://" + lxc_host_ip + "/ console " + vm_name + ""])
+        BUTTER_MAPPING[vm_name]['pid'] = butter_process.pid
+        BUTTER_MAPPING[vm_name]['subprocess'] = butter_process
+        return port
+    else:
+        BUTTER_MAPPING[vm_name]['subprocess'].kill()
+        BUTTER_MAPPING[vm_name]['subprocess'].communicate()
+        del BUTTER_MAPPING[vm_name]
+        return createbutter(lxc_host_ip,vm_name)
+
+
+def dropbutter(vm_name):
+    if vm_name in BUTTER_MAPPING:
+        get_pid = BUTTER_MAPPING[vm_name]['pid']
+        get_subprocess = BUTTER_MAPPING[vm_name]['subprocess']
+        get_subprocess.terminate()
+        return 'kill the butter process @'+vm_name+'['+str(get_pid)+']',True
+    else:
+        return 'no this butter process @'+vm_name,False        

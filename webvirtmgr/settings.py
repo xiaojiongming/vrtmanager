@@ -149,6 +149,12 @@ WS_HOST = '0.0.0.0'
 WS_PUBLIC_HOST = None
 WS_CERT = None
 
+BUTTER_MAPPING = {}
+RSSH_MAPPING ={}
+MAX_BUTTER_PROCESSOR_THREAD = 1000
+SESSION_COOKIE_AGE = 28800
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 # keepalive interval and count for libvirt connections
 #
 # from: http://libvirt.org/html/libvirt-libvirt.html#virConnectSetKeepAlive
@@ -213,4 +219,6 @@ INSTALLED_APPS = (
     'instance',
     'create',
     'gunicorn',
+    'createlxc',
+    'rssh',
 )

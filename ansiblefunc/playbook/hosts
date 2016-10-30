@@ -1,0 +1,6 @@
+[supervisor]
+10.101.11.240 ansible_ssh_host=10.101.11.240 ansible_ssh_user=root ansible_ssh_pass=Abc,123.
+10.101.11.5 ansible_ssh_host=10.101.11.5 ansible_ssh_user=root ansible_ssh_pass=Abc,123.
+10.101.11.6 ansible_ssh_host=10.101.11.6 ansible_ssh_user=root ansible_ssh_pass=Abc,123.
+10.101.11.101 ansible_ssh_host=10.101.11.101 ansible_ssh_user=root ansible_ssh_pass=123456
+

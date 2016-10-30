@@ -1055,7 +1055,7 @@ msgstr "无任何虚拟机"
 #: templates/interface.html:4 templates/interface.html.py:19
 #: templates/interfaces.html:4
 msgid "Interface"
-msgstr ""
+msgstr "接口"
 
 #: templates/interface.html:23 templates/interfaces.html:112
 msgid "IPv4"
@@ -1073,10 +1073,10 @@ msgstr ""
 msgid "Interface type"
 msgstr ""
 
-#: templates/interface.html:40
+#: templates/interface.html:40 templates/networks.html:119
 #, fuzzy
 msgid "Bridge device"
-msgstr "桥接名称"
+msgstr "桥接设备"
 
 #: templates/interface.html:45
 msgid "Boot mode"
@@ -1303,7 +1303,7 @@ msgstr ""
 #: templates/secrets.html:4 templates/sidebar.html:32
 #: templates/storages.html:201
 msgid "Secrets"
-msgstr ""
+msgstr "密钥"
 
 #: templates/secrets.html:23
 msgid "UUID"
@@ -1477,7 +1477,7 @@ msgstr "网络池"
 
 #: templates/sidebar.html:28
 msgid "Interfaces"
-msgstr ""
+msgstr "接口池"
 
 #: templates/storage.html:3
 msgid "Storage Pool"

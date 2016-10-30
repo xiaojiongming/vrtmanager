@@ -64,20 +64,30 @@
         </li>
         {% ifequal compute.hypervisor 'qemu' %}
         <li><a class="inst-btn" href="#access" data-toggle="tab">
-            <span class="glyphicon glyphicon-briefcase"></span><br>{% trans "Access" %}
+            <span class="glyphicon glyphicon-log-in"></span><br>{% trans "Access" %}
         </a>
         </li>
         <li><a class="inst-btn" href="#snapshots" data-toggle="tab">
-            <span class="glyphicon glyphicon-camera"></span><br>{% trans "Snapshots" %}
+            <span class="glyphicon glyphicon-picture"></span><br>{% trans "Snapshots" %}
         </a>
         {% endifequal %}
         </li>
+        {% ifequal compute.hypervisor 'lxc' %}
+        <li><a class="inst-btn" href="#accesslxc" data-toggle="tab">
+            <span class="glyphicon glyphicon-log-in"></span><br>{% trans "Access" %}
+        </a>
+        </li>
+        <li><a class="inst-btn" href="#release" data-toggle="tab">
+            <span class="glyphicon glyphicon-file"></span><br>{% trans "Release" %}
+        </a>
+        </li>
+        {% endifequal %}
         <li><a class="inst-btn" href="#graph" data-toggle="tab">
             <span class="glyphicon glyphicon-signal"></span><br>{% trans "Statistics" %}
         </a>
         </li>
         <li><a class="inst-btn" href="#settings" data-toggle="tab">
-            <span class="glyphicon glyphicon-wrench"></span><br>{% trans "Settings" %}
+            <span class="glyphicon glyphicon-cog"></span><br>{% trans "Settings" %}
         </a>
         </li>
         {% ifequal compute.hypervisor 'qemu' %}
@@ -197,7 +207,6 @@
             {% if telnet_port %}
                 <li><a href="#telnet_console" data-toggle="tab">{% trans "Telnet Console" %}</a></li>
             {% endif %}
-
         </ul>
         <div class="tab-content">
             <div class="tab-pane tab-inst active" id="console">
@@ -331,14 +340,47 @@
             </div>
         </div>
     </div>
+
+    <div class="tab-pane" id="accesslxc" style="margin-top: 20px">
+        <ul class="nav nav-tabs nav-btn-act">
+            <li class="active"><a href="#console" data-toggle="tab">{% trans "Console" %}</a></li>
+            {% if telnet_port %}
+                <li><a href="#telnet_console" data-toggle="tab">{% trans "Telnet Console" %}</a></li>
+            {% endif %}
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane tab-inst active" id="console">
+                <p>{% trans "This action opens a new window with a connection to the console of the instance." %}</p>
+                {% ifequal status 5 %}
+                    <button class="btn btn-primary btn-lg pull-right disabled">{% trans "Console" %}</button>
+                {% else %}
+                    <a href="#" class="btn btn-primary btn-lg pull-right" title="Console port: {{ console_port }}"
+                       onclick="open_lxconsole()">{% trans "Console" %}</a>
+                {% endifequal %}
+                <div class="clearfix"></div>
+            </div>
+            <div class="tab-pane tab-inst" id="telnet_console">
+                <p>{% trans "This action open new window with console Telnet connection to your instance." %}</p>
+                {% ifequal status 5 %}
+                    <button class="btn btn-primary btn-lg pull-right disabled">{% trans "Console" %}</button>
+                {% else %}
+                    <a href="telnet://{{ compute.hostname }}:{{ telnet_port }}"
+                       class="btn btn-primary btn-lg pull-right"
+                       title="Telnet Port: {{ telnet_port }}">{% trans "Console" %}</a>
+                {% endifequal %}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="tab-pane" id="settings" style="margin-top: 20px">
     <ul class="nav nav-tabs nav-btn-act" style="margin-top: 20px">
         <li class="active"><a href="#instancesettings" data-toggle="tab">{% trans "VCPU's and Memory" %}</a></li>
-        {% ifequal compute.hypervisor 'qemu' %}
         <li><a href="#instancemedia" data-toggle="tab">{% trans "Media" %}</a></li>
-        {% endifequal %}
         <li><a href="#instancedevice" data-toggle="tab">{% trans "Disks and Networks" %}</a></li>
+        {% ifequal compute.hypervisor 'qemu' %}
         <li><a href="#instanceclone" data-toggle="tab">{% trans "Clone" %}</a></li>
+        {% endifequal %}
         <li><a href="#instancexml" data-toggle="tab">{% trans "XML" %}</a></li>
     </ul>
     <div class="tab-content">
@@ -511,6 +553,20 @@
             {% endfor %}
         </div>
         {% endifequal %}
+        {% ifequal compute.hypervisor 'lxc' %}
+        <p style="font-weight:bold;">{% trans "Storage devices" %}</p>
+
+        <div class="col-sm-3">
+            {% for target in networks %}
+                <p style="text-align: right;">{% trans "target dir" %}</p>
+            {% endfor %}
+        </div>
+        <div class="col-sm-9">
+            {% for source in networks %}
+                <p>{% trans "source file" %}.img</p>
+            {% endfor %}
+        </div>
+        {% endifequal %}
         <div class="clearfix"></div>
     </div>
     <div class="tab-pane tab-inst" id="instanceclone">
@@ -658,6 +714,88 @@
             </div>
         </div>
     </div>
+
+    <div class="tab-pane" id="release">
+        <ul class="nav nav-tabs nav-btn-act" style="margin-top: 20px">
+            <li class="active"><a href="#createrelease" data-toggle="tab">{% trans "Create Release" %}</a></li>
+            <li><a href="#istacereleases" data-toggle="tab">{% trans "Restore from Releases" %}</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane tab-inst active" id="createrelease">
+                <p>{% trans "To create a release, shutdown the instance." %}</p>
+
+                <form class="form-horizontal" method="post" role="form">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="releasename" class="col-sm-2 control-label">{% trans "Name" %}</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="name" placeholder="{% trans "Name" %}"
+                                   maxlength="14">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sourcedir" class="col-sm-2 control-label">{% trans "实例源目录" %}</label>
+
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" name="sourcedir" value="/" placeholder="{% trans "Instance's Directory" %}"
+                                   maxlength="14">
+                        </div>
+                    </div>
+                    {% ifequal status 5 %}
+                        <button type="submit" class="btn btn-primary btn-lg pull-right"
+                                name="release">{% trans "Publish a Release" %}</button>
+                    {% else %}
+                        <button class="btn btn-primary btn-lg pull-right disabled">{% trans "Publish a Release" %}</button>
+                    {% endifequal %}
+                </form>
+                <div class="clearfix"></div>
+            </div>
+            <div class="tab-pane tab-inst" id="istacereleases">
+                <p>{% trans "To restore to a release, shutdown the instance" %}</p>
+                {% if snapshots %}
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr class="active">
+                            <th>{% trans "Name" %}</th>
+                            <th>{% trans "Date" %}</th>
+                            <th colspan="2">{% trans "Action" %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for snap in snapshots %}
+                            <tr>
+                                <td><strong>{{ snap.name }}</strong></td>
+                                <td>{{ snap.date|date:"M d H:i:s" }}</td>
+                                <td style="width:30px;">
+                                    <form action="" method="post" style="height:10px" role="form">{% csrf_token %}
+                                        <input type="hidden" name="name" value="{{ snap.name }}">
+                                        {% ifequal status 5 %}
+                                            <button type="submit" class="btn btn-sm btn-primary" name="restore_release"
+                                                    onclick="return confirm('Are you sure?')">{% trans "Restore" %}</button>
+                                        {% else %}
+                                            <button type="button"
+                                                    class="btn btn-sm btn-primary disabled">{% trans "Restore" %}</button>
+                                        {% endifequal %}
+                                    </form>
+                                </td>
+                                <td style="width:30px;">
+                                    <form action="" method="post" role="form">{% csrf_token %}
+                                        <input type="hidden" name="name" value="{{ snap.name }}">
+                                        <button type="submit" class="btn btn-sm btn-danger" name="delete_release"
+                                                onclick="return confirm('{% trans "Are you sure?" %}')">{% trans "Delete" %}</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>{% trans "You do not have any releases" %}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
     <div class="tab-pane" id="graph">
         <ul class="nav nav-tabs nav-btn-act" style="margin-top: 20px">
             <li class="active"><a href="#statistics" data-toggle="tab">{% trans "Instance Statistics" %}</a></li>
@@ -808,6 +946,9 @@
     function open_console() {
         window.open('{% url 'console' %}?token={{ host_id }}-{{ uuid }}', '', 'width=850,height=485')
     }
+    function open_lxconsole() {
+        window.open('{% url 'lxconsole' %}?token={{ host_id }}-{{ uuid }}', '', 'width=850,height=485')
+     }
     function show_console() {
         if ($('#console_show_pass').attr('type') == 'password') {
             $('#console_show_pass').attr('type', 'text');

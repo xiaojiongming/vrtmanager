@@ -3,14 +3,19 @@ import re
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
+from django.shortcuts import redirect
 
-from instance.models import Instance
 from vrtManager.instance import wvmInstance
+from vrtManager import lxconsole
+
+from servers.models import Compute
+from instance.models import Instance
 
 from webvirtmgr.settings import WS_PORT
 from webvirtmgr.settings import WS_PUBLIC_HOST
-
 
 def console(request):
     """
@@ -21,6 +26,12 @@ def console(request):
 
     if request.method == 'GET':
         token = request.GET.get('token', '')
+
+    temptoken = token.split('-', 1)
+    host_id = int(temptoken[0])
+    uuid = temptoken[1]
+    compute = Compute.objects.get(id=host_id)
+    vm = Instance.objects.get(uuid=uuid)
 
     try:
         temptoken = token.split('-', 1)

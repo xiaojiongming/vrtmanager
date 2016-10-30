@@ -1,0 +1,18 @@
+                                    <option value="RHel9">{% trans "Redhat Linux9" %}</option>
+                                    <option value="Fedora9">{% trans "Fedora9" %}</option>
+                                    <option value="SLES">{% trans "SLES" %}</option>
+                                    <option value="SuSE">{% trans "SuSE" %}</option>
+                                    <option value="ubuntu">{% trans "ubuntu" %}</option>
+                                    <option value="Centos7" selected="selected">{% trans "默认minimal centos7容器" %}</option>
+                                    <option value="Centos6">{% trans "minimal centos6" %}</option>
+                                    <option value="apache">{% trans "apache" %}</option>
+                                    <option value="nginx">{% trans "nginx" %}</option>
+                                    <option value="mongo">{% trans "mongo" %}</option>
+                                    <option value="mysql">{% trans "mysql" %}</option>
+                                    <option value="postgresql">{% trans "postgresql" %}</option>
+                                    <option value="tomcat">{% trans "tomcat" %}</option>
+                                    <option value="oracle">{% trans "oracle" %}</option>
+                                    <option value="websphere">{% trans "websphere" %}</option>
+                                    <option value="glassfish">{% trans "glassfish" %}</option>
+                                    <option value="ruby perl java php gcc jetty pypy python django" title="ruby perl java php gcc jetty pypy python django">{% trans "ruby perl java php gcc jetty pypy python django" %}</option>
+                                    <option value="mariadb">{% trans "mariadb" %}</option>
