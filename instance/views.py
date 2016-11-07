@@ -18,6 +18,7 @@ from vrtManager.instance import wvmInstances, wvmInstance
 
 from libvirt import libvirtError, VIR_DOMAIN_XML_SECURE
 from webvirtmgr.settings import TIME_JS_REFRESH, QEMU_KEYMAPS, QEMU_CONSOLE_TYPES
+import xml.etree.ElementTree as ET
 
 
 def instusage(request, host_id, vname):
@@ -406,6 +407,22 @@ def instance(request, host_id, vname):
             media = conn.get_media_device()
             disks = conn.get_disk_device()
             clone_disks = show_clone_disk(disks)
+        if compute.hypervisor == 'lxc':
+            fslist=[]
+            disks=[]
+            vm = conn.get_instance(vname)
+            root = ET.fromstring(vm.XMLDesc())
+            filesystem = root.find('devices').findall('filesystem')
+            for fs in list(filesystem):
+                for child in fs:
+                    fslist.append(child.attrib)
+            rootimg = fslist[0]['dir'].split('/')[2]+'.img'
+            disks.append({'mount':'/','image':rootimg})
+            fslist = fslist[2:]
+            tmp = 0
+            while tmp<len(fslist):
+                disks.append({'mount':fslist[tmp+1]['dir'],'image':fslist[tmp]['file'].split('/')[2]})
+                tmp+=2
         hypervisor = compute.hypervisor
     except libvirtError as err:
         errors.append(err)

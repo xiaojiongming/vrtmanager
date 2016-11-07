@@ -555,18 +555,18 @@
         {% endifequal %}
         {% ifequal compute.hypervisor 'lxc' %}
         <p style="font-weight:bold;">{% trans "Storage devices" %}</p>
-
         <div class="col-sm-3">
-            {% for target in networks %}
-                <p style="text-align: right;">{% trans "target dir" %}</p>
+            {% for disk in disks %}
+                <p style="text-align: right;">{{ disk.mount }}</p>
             {% endfor %}
         </div>
         <div class="col-sm-9">
-            {% for source in networks %}
-                <p>{% trans "source file" %}.img</p>
+            {% for disk in disks %}
+                <p>{{ disk.image }}</p>
             {% endfor %}
         </div>
         {% endifequal %}
+
         <div class="clearfix"></div>
     </div>
     <div class="tab-pane tab-inst" id="instanceclone">
@@ -741,11 +741,24 @@
                                    maxlength="14">
                         </div>
                     </div>
+
+                <p>{% trans "Publish a new template for release" %}</p>
+                    <div class="form-group">
+                        <div class="checkbox" style="margin-left: 80px;">
+                        <label>
+                            <input type="checkbox" name="publish_template" value="true">
+                            <strong><span
+                                    class="label label-danger">{% trans "Warning:" %}</span> {% trans "If you check this box, Release will also be published in the form of a template!" %}
+                            </strong>
+                        </label>
+                        </div>
+                    </div>
+
                     {% ifequal status 5 %}
                         <button type="submit" class="btn btn-primary btn-lg pull-right"
-                                name="release">{% trans "Publish a Release" %}</button>
+                                name="release">{% trans "Backup a Release" %}</button>
                     {% else %}
-                        <button class="btn btn-primary btn-lg pull-right disabled">{% trans "Publish a Release" %}</button>
+                        <button class="btn btn-primary btn-lg pull-right disabled">{% trans "Backup a Release" %}</button>
                     {% endifequal %}
                 </form>
                 <div class="clearfix"></div>
@@ -790,7 +803,7 @@
                         </tbody>
                     </table>
                 {% else %}
-                    <p>{% trans "You do not have any releases" %}</p>
+                    <p>{% trans "你没有任何备份版本" %}</p>
                 {% endif %}
             </div>
         </div>

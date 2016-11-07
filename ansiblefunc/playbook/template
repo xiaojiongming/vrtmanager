@@ -1,2 +1,19 @@
 Centos7Base,/var/template/Centos7Base.template.tar
 Centos6Base,/var/template/centos6base.tar
+Redhat Linux9,/var/template/Centos7Base.template.tar
+Fedora9,/var/template/Centos7Base.template.tar
+SLES,/var/template/Centos7Base.template.tar
+SuSE,/var/template/Centos7Base.template.tar
+ubuntu,/var/template/Centos7Base.template.tar
+minimal centos6,/var/template/Centos7Base.template.tar
+apache,/var/template/Centos7Base.template.tar
+nginx,/var/template/Centos7Base.template.tar
+mongo,/var/template/Centos7Base.template.tar
+mysql,/var/template/Centos7Base.template.tar
+postgresql,/var/template/Centos7Base.template.tar
+tomcat,/var/template/Centos7Base.template.tar
+oracle,/var/template/Centos7Base.template.tar
+websphere,/var/template/Centos7Base.template.tar
+glassfish,/var/template/Centos7Base.template.tar
+ruby perl java php gcc jetty pypy python django,/var/template/Centos7Base.template.tar
+mariadb,/var/template/Centos7Base.template.tar
