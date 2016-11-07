@@ -1,3 +1,7 @@
+2016/11/07
+
+*fix lxc disk show 
+
 2016/10/30 at Neusoft
 
 * add lxc manage support ,include create a lxc vm from custom /template (ansible and virsh)
